@@ -71,8 +71,6 @@ public class Movement : MonoBehaviour
 
         TryToDrawnDirectionShower();
         SetGravityWhileFalling();
-
-
     }
 
 
@@ -93,92 +91,71 @@ public class Movement : MonoBehaviour
 
     void Dragging()
     {
-        if (touchStarted)
-        {
-            draggingPos = Camera.main.ScreenToWorldPoint(touch.position);
-            draggingPos.z = 0;
-
-
-            lr.positionCount = 2;
-            lr.SetPosition(0, Camera.main.ViewportToWorldPoint(dragStartViewPos));
-            lr.SetPosition(1, draggingPos);
-
-
-
-
-            dragReleasePos = Camera.main.ScreenToWorldPoint(touch.position);
-            dragReleasePos.z = 0;
-
-            dragStartPos = Camera.main.ViewportToWorldPoint(dragStartViewPos);
-
-            Vector3 force = dragStartPos - dragReleasePos;
-            clampedForce = Vector3.ClampMagnitude(force, maxDrag) * power;
-            drawerDirection = dragReleasePos - dragStartPos;
-
-            Vector2 currentVelocity = rb.velocity;
-            float currentForce = Mathf.Sqrt(Mathf.Pow(currentVelocity.x, 2) + Mathf.Pow(currentVelocity.y, 2));
-            float launchForce = Mathf.Sqrt(Mathf.Pow(clampedForce.x, 2) + Mathf.Pow(clampedForce.y, 2));
-            finalForce = launchForce - currentForce;
-        }
-
+        DraggingAndStationary();
     }
+
+
 
     void Stationary()
     {
-        if (touchStarted)
-        {
-            draggingPos = Camera.main.ScreenToWorldPoint(touch.position);
-            draggingPos.z = 0;
-
-
-
-            lr.positionCount = 2;
-            lr.SetPosition(0, Camera.main.ViewportToWorldPoint(dragStartViewPos));
-            lr.SetPosition(1, draggingPos);
-
-
-            dragReleasePos = Camera.main.ScreenToWorldPoint(touch.position);
-            dragReleasePos.z = 0;
-
-            dragStartPos = Camera.main.ViewportToWorldPoint(dragStartViewPos);
-
-            Vector3 force = dragStartPos - dragReleasePos;
-            clampedForce = Vector3.ClampMagnitude(force, maxDrag) * power;
-            drawerDirection = dragReleasePos - dragStartPos;
-
-            Vector2 currentVelocity = rb.velocity;
-            float currentForce = Mathf.Sqrt(Mathf.Pow(currentVelocity.x, 2) + Mathf.Pow(currentVelocity.y, 2));
-            float launchForce = Mathf.Sqrt(Mathf.Pow(clampedForce.x, 2) + Mathf.Pow(clampedForce.y, 2));
-            finalForce = launchForce - currentForce;
-        }
-       
+        DraggingAndStationary();
     }
 
     void DragRelease()
     {
-        lr.positionCount = 0;
-        dragReleasePos = Camera.main.ScreenToWorldPoint(touch.position);
-        dragReleasePos.z = 0;
+        if (touchStarted)
+        {
+            lr.positionCount = 0;
+            dragReleasePos = Camera.main.ScreenToWorldPoint(touch.position);
+            dragReleasePos.z = 0;
 
-        Vector3 force = dragStartPos - dragReleasePos;
-        clampedForce = Vector3.ClampMagnitude(force, maxDrag) * power;
+            Vector3 force = dragStartPos - dragReleasePos;
+            clampedForce = Vector3.ClampMagnitude(force, maxDrag) * power;
 
-        rb.AddForce(clampedForce, ForceMode2D.Impulse);
+            rb.AddForce(clampedForce, ForceMode2D.Impulse);
 
-        dragStartPos = Vector3.zero;
-        draggingPos = Vector3.zero;
-        dragReleasePos = Vector3.zero;
+            dragStartPos = Vector3.zero;
+            draggingPos = Vector3.zero;
+            dragReleasePos = Vector3.zero;
 
-        DeleteDirectionShower();
+            DeleteDirectionShower();
 
-        canJump = false;
-        touchStarted = false;
+            canJump = false;
+            touchStarted = false;
+        }
     }
 
     Vector2 PointPosition(float t)
     {
         Vector2 position = (Vector2)transform.position + (-drawerDirection.normalized * finalForce * t) + 0.5f * Physics2D.gravity * (t * t);
         return position;
+    }
+
+    private void DraggingAndStationary()
+    {
+        if (touchStarted)
+        {
+            draggingPos = Camera.main.ScreenToWorldPoint(touch.position);
+            draggingPos.z = 0;
+
+            lr.positionCount = 2;
+            lr.SetPosition(0, Camera.main.ViewportToWorldPoint(dragStartViewPos));
+            lr.SetPosition(1, draggingPos);
+
+            dragReleasePos = Camera.main.ScreenToWorldPoint(touch.position);
+            dragReleasePos.z = 0;
+
+            dragStartPos = Camera.main.ViewportToWorldPoint(dragStartViewPos);
+
+            Vector3 force = dragStartPos - dragReleasePos;
+            clampedForce = Vector3.ClampMagnitude(force, maxDrag) * power;
+            drawerDirection = dragReleasePos - dragStartPos;
+
+            Vector2 currentVelocity = rb.velocity;
+            float currentForce = Mathf.Sqrt(Mathf.Pow(currentVelocity.x, 2) + Mathf.Pow(currentVelocity.y, 2));
+            float launchForce = Mathf.Sqrt(Mathf.Pow(clampedForce.x, 2) + Mathf.Pow(clampedForce.y, 2));
+            finalForce = launchForce - currentForce;
+        }
     }
 
     void SpawnDirectionShower()
