@@ -7,4 +7,9 @@ public class DiedPanelButtonScript : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
+    public void GoToMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
 }

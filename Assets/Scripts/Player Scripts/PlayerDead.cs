@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 public class PlayerDead : MonoBehaviour
 {
+    public CoinScritableObject Repo;
     public GameObject deadScreen;
-    public TextMeshProUGUI secondsSurvivedUI;
-
+    public Text secondsSurvivedUI;
+    public Text earnedCoinsUI;
+    public Text goldShowerTextUI;
 
     Vector2 screenHalfSizeWorldUnits;
 
@@ -39,6 +41,10 @@ public class PlayerDead : MonoBehaviour
         GetComponent<Movement>().GetDeleteDirectinShower();
         deadScreen.SetActive(true);
         secondsSurvivedUI.text = Mathf.RoundToInt(Time.timeSinceLevelLoad).ToString();
+        earnedCoinsUI.text = ((int)Time.timeSinceLevelLoad / 2).ToString();
+        Repo.IncreaseCoin((int)Time.timeSinceLevelLoad / 2);
+        goldShowerTextUI.text = Repo.getCoinAsInt().ToString();
+
         Destroy(gameObject);
     }
 }
