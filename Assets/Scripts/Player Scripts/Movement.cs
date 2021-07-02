@@ -31,6 +31,10 @@ public class Movement : MonoBehaviour
     [Header("Falling Gravity Values")]
     [SerializeField] float fallMultiplier = 2.5f;
 
+    [Header("Jump Sound Values")]
+    public AudioSource jumpSound;
+
+
     bool canJump;
     bool touchStarted;
 
@@ -122,6 +126,8 @@ public class Movement : MonoBehaviour
 
             canJump = false;
             touchStarted = false;
+
+            jumpSound.Play();
         }
     }
 

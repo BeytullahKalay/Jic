@@ -35,6 +35,7 @@ public class PlayerDead : MonoBehaviour
     }
     private void OnPlayerDead()
     {
+        GameObject.FindGameObjectWithTag("GM").GetComponent<GameManager>().gameOverMusic.Play();
         GetComponent<Movement>().GetDeleteDirectinShower();
         deadScreen.SetActive(true);
         secondsSurvivedUI.text = Mathf.RoundToInt(Time.timeSinceLevelLoad).ToString();
